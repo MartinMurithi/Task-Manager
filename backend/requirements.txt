@@ -1,0 +1,13 @@
+django
+django-ninja
+django-ninja-jwt
+celery
+redis
+psycopg2-binary
+python-dotenv
+gunicorn
+
+# Testing
+pytest
+pytest-django
+pytest-cov
