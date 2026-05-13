@@ -6,6 +6,8 @@ redis
 psycopg2-binary
 python-dotenv
 gunicorn
+email-validator
+
 
 # Testing
 pytest

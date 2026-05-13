@@ -31,6 +31,28 @@ services:
       timeout: 3s
       retries: 5
 
+  celery:
+    build: ./backend
+    container_name: tm_celery
+    command: celery -A config worker --loglevel=info --concurrency=2 --max-tasks-per-child=1000
+    volumes:
+      - ./backend:/app
+    environment:
+      - DEBUG=${DEBUG:-1}
+      - SECRET_KEY=${SECRET_KEY:-django-insecure-change-in-prod}
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=${DB_NAME:-taskmanager}
+      - DB_USER=${DB_USER:-tm_user}
+      - DB_PASSWORD=${DB_PASSWORD:-supersecret}
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
   api:
     build: ./backend
     container_name: tm_api
