@@ -2,6 +2,8 @@ from django.urls import path
 from ninja_extra import NinjaExtraAPI
 from ninja_jwt.authentication import JWTAuth
 from ninja_jwt.controller import NinjaJWTDefaultController
+from users.api import router as users_router
+from tasks.api import router as tasks_router
 
 # Initialize NinjaExtraAPI
 api = NinjaExtraAPI(
@@ -14,6 +16,10 @@ api = NinjaExtraAPI(
 # Register the JWT Authentication routes (Login, Refresh, Verify)
 # This adds: /api/v1/token/pair, /api/v1/token/refresh, etc.
 api.register_controllers(NinjaJWTDefaultController)
+
+
+api.add_router("/users", users_router)
+api.add_router("/tasks", tasks_router)
 
 
 # Public Endpoint (Health Check)
