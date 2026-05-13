@@ -22,14 +22,12 @@ api.add_router("/users", users_router)
 api.add_router("/tasks", tasks_router)
 
 
-# Public Endpoint (Health Check)
 @api.get("/health", tags=["System"])
 def health_check(request):
     """System health check."""
     return {"status": "healthy", "service": "task-manager-api"}
 
 
-# Example Protected Endpoint (Only logged-in users can see this)
 @api.get("/me", auth=JWTAuth(), tags=["User"])
 def get_me(request):
     """Returns the current user's username."""

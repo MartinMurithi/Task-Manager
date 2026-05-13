@@ -9,7 +9,6 @@ from django.core.management import (
 )
 
 
-# This fixture ensures settings are valid and consistent for ALL tests
 @pytest.fixture(autouse=True)
 def force_settings(settings):
     settings.SECRET_KEY = "elqmat&3@f3$72zmpvjuoj6$gmwq8_u)8n-b+mw2lqlou4@1_"

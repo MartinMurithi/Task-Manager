@@ -24,7 +24,6 @@ def list_assignable_users(request):
     return User.objects.exclude(id=request.user.id)
 
 
-# --- TASK OPERATIONS ---
 @router.get("/", response=List[TaskOutSchema], auth=JWTAuth())
 def list_tasks(request, filters: NinjaQuery[TaskFilterSchema]):
     # Apply "Privacy" wall (Only mine or assigned to me)
@@ -71,7 +70,7 @@ def update_task(request, task_id: int, payload: TaskUpdateSchema):
         ):
             raise HttpError(403, "Assignees can only change status to 'review'.")
 
-    # 2️⃣ Validate Status Transition
+    # Validate Status Transition
     new_status = update_data.get("status")
     if new_status and new_status != task.status:
         status_val = new_status.value if hasattr(new_status, "value") else new_status
@@ -79,7 +78,7 @@ def update_task(request, task_id: int, payload: TaskUpdateSchema):
         if status_val not in allowed:
             raise HttpError(400, f"Invalid transition: {task.status} → {status_val}")
 
-    # 3️⃣ Apply Updates
+    # Apply Updates
     fields_to_update = set(update_data.keys())
 
     for field, value in update_data.items():
@@ -97,7 +96,7 @@ def update_task(request, task_id: int, payload: TaskUpdateSchema):
 
     task.save(update_fields=list(fields_to_update))
 
-    # 4️⃣ Trigger async notification if moved to REVIEW
+    # Trigger async notification if moved to REVIEW
     if new_status == TaskStatus.REVIEW:
         notify_review_task(task.id)
 
